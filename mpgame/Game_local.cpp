@@ -990,7 +990,7 @@ idGameLocal::GetPersistentPlayerInfo
 */
 const idDict &idGameLocal::GetPersistentPlayerInfo( int clientNum ) {
 	idEntity	*ent;
-
+	
 	persistentPlayerInfo[ clientNum ].Clear();
 	ent = entities[ clientNum ];
 // RAVEN BEGIN
