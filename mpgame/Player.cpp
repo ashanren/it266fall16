@@ -8704,15 +8704,11 @@ void idPlayer::AdjustSpeed( void ) {
 	}
 
 	speed *= PowerUpModifier(PMOD_SPEED);
-	if(health < 100 && health >= 50)
+	if(health < 100)
 	{
 		speed *= health*(.01);
 	}
-	else if(health < 50)
-	{
-		speed *= health*(.02);
-		
-	}
+
 
 	if ( influenceActive == INFLUENCE_LEVEL3 ) {
 		speed *= 0.33f;
@@ -8969,7 +8965,6 @@ void idPlayer::Move( void ) {
 	idVec3 oldOrigin;
 	idVec3 oldVelocity;
 	idVec3 pushVelocity;
-	gameLocal.Printf("Im moving");
 	// save old origin and velocity for crashlanding
 	oldOrigin = physicsObj.GetOrigin();
 	oldVelocity = physicsObj.GetLinearVelocity();
@@ -10261,7 +10256,10 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 		}
 
 		int oldHealth = health;
-		health -= damage;
+		if((health - damage) >0)
+			health -= damage;
+		else
+			health = 1;
 
 		GAMELOG_ADD ( va("player%d_damage_taken", entityNumber ), damage );
 		GAMELOG_ADD ( va("player%d_damage_%s", entityNumber, damageDefName), damage );
@@ -12564,7 +12562,7 @@ void idPlayer::ReadFromSnapshot( const idBitMsgDelta &msg ) {
 			currentWeapon = -1;			
 		}
 	} else if ( oldHealth <= 0 && health > 0 ) {
-		gameLocal.Printf("Gets to first if");
+		gameLocal.Printf("Gets to 3rd if really weird");
  		// respawn
 		//common->DPrintf( "idPlayer::ReadFromSnapshot() - Player respawn detected for %d '%s' - re-enabling clip\n", entityNumber, GetUserInfo() ? GetUserInfo()->GetString( "ui_name" ) : "" );
 
@@ -12578,7 +12576,6 @@ void idPlayer::ReadFromSnapshot( const idBitMsgDelta &msg ) {
 		physicsObj.EnableClip();
 		SetCombatContents( true );
 	} else if ( oldHealth - health > 2 && health > 0 ) {
-		gameLocal.Printf("Gets to second if");
  		if ( stateHitch ) {
 			lastDmgTime = gameLocal.time;
    		} else {
