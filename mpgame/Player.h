@@ -301,6 +301,8 @@ public:
 	int						buttonMask;
 	int						oldButtons;
 	int						oldFlags;
+	bool					IT;
+
 
 	int						lastSavingThrowTime;	// for the "free miss" effect
 

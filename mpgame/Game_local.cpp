@@ -988,7 +988,7 @@ void idGameLocal::SaveGame( idFile *f, saveType_t saveType ) {
 idGameLocal::GetPersistentPlayerInfo
 ============
 */
-const idDict &idGameLocal::GetPersistentPlayerInfo( int clientNum ) {
+const idDict &idGameLocal::GetPersistentPlayerInfo( int clientNum ) {//jarel look at this
 	idEntity	*ent;
 	
 	persistentPlayerInfo[ clientNum ].Clear();
@@ -1145,7 +1145,7 @@ idGameLocal::SetLocalClient
 void idGameLocal::SetLocalClient( int clientNum ) {
 	localClientNum = clientNum;
 }
-
+//jarel look at this 2nd option
 /*
 ===========
 idGameLocal::SetUserInfo
@@ -1459,6 +1459,7 @@ void idGameLocal::LoadMap( const char *mapName, int randseed ) {
 	memset( spawnIds, -1, sizeof( spawnIds ) );
 	spawnCount = INITIAL_SPAWN_COUNT;
 	
+	
 	spawnedEntities.Clear();
 	activeEntities.Clear();
 	numEntitiesToDeactivate = 0;
@@ -1470,6 +1471,7 @@ void idGameLocal::LoadMap( const char *mapName, int randseed ) {
 // RAVEN BEGIN
 // bdube: client entities
 	clientSpawnCount = INITIAL_SPAWN_COUNT;
+	gameLocal.Printf("Spawn count %i\n", clientSpawnCount);
 	clientSpawnedEntities.Clear ( );
 	memset ( clientSpawnIds, -1, sizeof(clientSpawnIds ) );
 	memset ( clientEntities, 0, sizeof(clientEntities) );
@@ -6609,7 +6611,7 @@ idGameLocal::SetCurrentPlayerInfo
 */
 void idGameLocal::SetPlayerInfo( idVec3 &origin, idMat3 &axis, int PlayerNum ) {
 	idPlayer	*player;
-
+	//jarel
 	if ( PlayerNum == -1 ) {
 		player = GetLocalPlayer();
 	} else {

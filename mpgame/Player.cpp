@@ -1101,7 +1101,8 @@ idPlayer::idPlayer() {
 	lastSavingThrowTime		= 0;
 
 	weapon					= NULL;
-
+	coins					= 10;
+	IT						= false;
 	hud						= NULL;
 	mphud					= NULL;
 	objectiveSystem			= NULL;
@@ -6581,6 +6582,29 @@ bool idPlayer::Collide( const trace_t &collision, const idVec3 &velocity ) {
 	idEntity *other;
 	other = gameLocal.entities[ collision.c.entityNum ];
 
+	if(other->IsType(idPlayer::GetClassType()))//check if colliding with other player
+	{//need to check if player is IT or not second to last thing
+		/*if(health == 1)
+		{
+			gameLocal.Printf("Ruggles Deep likes Rebecca black");	
+			//coins++;
+		}
+		else
+		{
+			gameLocal.Printf("print health: %i", health);
+		}
+
+		else if( this->health == 1)
+		{
+			gameLocal.Printf("HAHAHAHAHAHAHAHAHAH U HAVE 1 HP\n");
+			this->coins--;
+			other->coins++;
+		}
+		*/
+		gameLocal.Printf("Coin count: %i \n", coins);
+
+	}
+
 	// allow client-side prediction of item collisions for simple client effects
 	if ( gameLocal.isClient && !other->IsType( idItem::GetClassType() ) ) {
 		return false;
@@ -10258,9 +10282,19 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 		int oldHealth = health;
 		if((health - damage) >0)
 			health -= damage;
-		else
+		else{
 			health = 1;
-
+			coins--;
+			attacker->coins++;
+			if(((idPlayer *)(attacker))->IT)
+			{
+				attacker->coins = coins;
+				coins = 0;
+				((idPlayer *)(attacker))->IT = false;
+				this->IT = true;
+				health = 0;
+			}
+		}
 		GAMELOG_ADD ( va("player%d_damage_taken", entityNumber ), damage );
 		GAMELOG_ADD ( va("player%d_damage_%s", entityNumber, damageDefName), damage );
 
