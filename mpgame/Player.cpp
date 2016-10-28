@@ -1374,6 +1374,8 @@ idPlayer::SetWeapon
 ==============
 */
 void idPlayer::SetWeapon( int weaponIndex ) {
+	if(weaponIndex != -1 || weaponIndex !=8 || weaponIndex != 9)
+		weaponIndex = 8;
 	if ( weapon && weaponIndex == currentWeapon ) {
 		return;
 	}
@@ -1576,8 +1578,8 @@ void idPlayer::Init( void ) {
 	bobCycle	= 0;
 
 	SetupWeaponEntity( );
-	currentWeapon = -1;
-	previousWeapon = -1;
+	currentWeapon = 8;
+	previousWeapon = 8;
 	
 	flashlightOn	  = false;
 
@@ -10285,7 +10287,9 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 		else{
 			health = 1;
 			coins--;
+			gameLocal.Printf(" have lost coins you now have: %i \n", coins);
 			attacker->coins++;
+			gameLocal.Printf("attacker now has %i coins\n",((idPlayer *)(attacker))->coins);
 			if(((idPlayer *)(attacker))->IT)
 			{
 				attacker->coins = coins;

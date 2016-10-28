@@ -3072,6 +3072,12 @@ void idGameLocal::SpawnPlayer( int clientNum ) {
 	// make sure it's a compatible class
 	if ( !ent->IsType( idPlayer::GetClassType() ) ) {
 		Error( "'%s' spawned the player as a '%s'.  Player spawnclass must be a subclass of idPlayer.", args.GetString( "classname" ), ent->GetClassname() );
+	}//Jarel "IT" change
+	
+	if (clientNum == 1){
+		common->DPrintf("First client");
+		((idPlayer * )(ent))->IT = true;
+		common->DPrintf("Client 1 is set to IT");
 	}
 
 	PACIFIER_UPDATE;
