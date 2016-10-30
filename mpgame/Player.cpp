@@ -8737,7 +8737,15 @@ void idPlayer::AdjustSpeed( void ) {
 	speed *= PowerUpModifier(PMOD_SPEED);
 	if(IT)
 	{
-		speed *= speed*4;
+		speed *= 4;
+		if(health < 100){
+			if(health == 50){
+				speed *= 2;
+			}
+			else{
+				speed *= health*(.1);
+			}
+		}
 	}
 	else
 	{
@@ -10293,23 +10301,33 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 		}
 
 		int oldHealth = health;
-		if((health - damage) >0)
-			health -= damage;
-		else{
-			health = 1;
-			coins--;
-			gameLocal.Printf(" have lost coins you now have: %i \n", coins);
-			attacker->coins++;
-			gameLocal.Printf("attacker now has %i coins\n",((idPlayer *)(attacker))->coins);
-			if(((idPlayer *)(attacker))->IT)
-			{
-				attacker->coins = coins;
-				coins = 0;
-				((idPlayer *)(attacker))->IT = false;
-				this->IT = true;
-				health = 0;
-			}
+		if(IT)
+		{
+			if( (health - damage) >50)
+				health -= damage;
+			else 
+				health = 50;
 		}
+		else
+		{
+				if((health - damage) >0)
+				health -= damage;
+			else{
+				health = 1;
+				coins--;
+				gameLocal.Printf(" have lost coins you now have: %i \n", coins);
+				attacker->coins++;
+				gameLocal.Printf("attacker now has %i coins\n",((idPlayer *)(attacker))->coins);
+				if(((idPlayer *)(attacker))->IT)
+				{
+					attacker->coins = coins;
+					coins = 0;
+					((idPlayer *)(attacker))->IT = false;
+					this->IT = true;
+					health = 0;
+				}
+			}
+		}	
 		GAMELOG_ADD ( va("player%d_damage_taken", entityNumber ), damage );
 		GAMELOG_ADD ( va("player%d_damage_%s", entityNumber, damageDefName), damage );
 
