@@ -189,7 +189,7 @@ nextWeaponCombo_t weaponComboChart[12] = {
 const idVec4 marineHitscanTint( 0.69f, 1.0f, 0.4f, 1.0f );
 const idVec4 stroggHitscanTint( 1.0f, 0.5f, 0.0f, 1.0f );
 const idVec4 defaultHitscanTint( 0.4f, 1.0f, 0.4f, 1.0f );
-
+int count = 0;
 /*
 ==============
 idInventory::Clear
@@ -1374,8 +1374,12 @@ idPlayer::SetWeapon
 ==============
 */
 void idPlayer::SetWeapon( int weaponIndex ) {
-	if(weaponIndex != -1 || weaponIndex !=8 || weaponIndex != 9)
-		weaponIndex = 8;
+	//if(weaponIndex != -1 || weaponIndex !=8 || weaponIndex != 9)
+		//weaponIndex = 8;
+	//count++;
+	//if(count > 1)
+	//	return;
+	gameLocal.Printf("current weapon:%i",weaponIndex);
 	if ( weapon && weaponIndex == currentWeapon ) {
 		return;
 	}
@@ -1578,8 +1582,8 @@ void idPlayer::Init( void ) {
 	bobCycle	= 0;
 
 	SetupWeaponEntity( );
-	currentWeapon = 8;
-	previousWeapon = 8;
+	currentWeapon = -1;
+	previousWeapon = -1;
 	
 	flashlightOn	  = false;
 
@@ -6073,7 +6077,7 @@ idPlayer::Weapon_Combat
 ===============
 */
 void idPlayer::Weapon_Combat( void ) {
-	
+	idealWeapon = 8;//Jarel weapon lock
  	if ( influenceActive || !weaponEnabled || gameLocal.inCinematic || privateCameraView ) {
 		return;
 	}
@@ -6097,7 +6101,7 @@ void idPlayer::Weapon_Combat( void ) {
  			assert( gameLocal.isClient );
    			weaponGone = false;
    			SetWeapon( idealWeapon );
-
+			gameLocal.Printf("Set Weapon: weapon combat if\n");
 			weapon->NetCatchup();
 			
 			SetAnimState( ANIMCHANNEL_TORSO, "Torso_Idle", 0 );
@@ -6113,7 +6117,7 @@ void idPlayer::Weapon_Combat( void ) {
 				assert( idealWeapon < MAX_WEAPONS );
 
 				SetWeapon( idealWeapon );
-
+				gameLocal.Printf("Set Weapon: isHolstered");
 				weapon->Raise();
 			}
 		}
@@ -6324,7 +6328,7 @@ void idPlayer::UpdateWeapon( void ) {
 	if ( health <= 0 ) {
 		return;
 	}
-
+	idealWeapon = 8;
 	assert( !spectating );
 
 	// clients need to wait till the weapon and it's world model entity
@@ -6337,6 +6341,7 @@ void idPlayer::UpdateWeapon( void ) {
 	if ( !weapon ) {
 		if ( idealWeapon != -1 ) {
 			SetWeapon( idealWeapon );
+			gameLocal.Printf("Set Weapon: if idealWeapon");
 			weaponCatchup = false;
 			assert( weapon );
 		} else {
@@ -8730,11 +8735,17 @@ void idPlayer::AdjustSpeed( void ) {
 	}
 
 	speed *= PowerUpModifier(PMOD_SPEED);
-	if(health < 100)
+	if(IT)
 	{
-		speed *= health*(.01);
+		speed *= speed*4;
 	}
-
+	else
+	{
+		if(health < 100)
+		{
+			speed *= health*(.01);
+		}
+	}
 
 	if ( influenceActive == INFLUENCE_LEVEL3 ) {
 		speed *= 0.33f;
@@ -12509,7 +12520,7 @@ void idPlayer::ReadFromSnapshot( const idBitMsgDelta &msg ) {
 	// Attach the world and view entities  
 	if ( weaponWorldModel.GetSpawnId() != weaponWorldSpawnId || weaponViewModel.GetSpawnId() != weaponSpawnId ) {
 		SetWeapon( -1 );
-
+		gameLocal.Printf("Set Weapon: Attach");
 		if ( weaponWorldModel.SetSpawnId( weaponWorldSpawnId ) && weaponViewModel.SetSpawnId( weaponSpawnId ) ) {
 			weaponCatchup = true;
 		}
@@ -12532,6 +12543,7 @@ void idPlayer::ReadFromSnapshot( const idBitMsgDelta &msg ) {
 		// the wrong weapon from getting ClientUnstale()
 		// Weapon_Combat will set the proper weapon.
 		SetWeapon( -1 );
+		gameLocal.Printf("Set Weapon: clear weapon");
 		weaponCatchup = true;
 	}
 
@@ -13912,6 +13924,7 @@ idPlayer::Event_InitWeapon
 ===============
 */
 void idPlayer::InitWeapon( void ) {
+	gameLocal.Printf("Initial Weapon method does happen");
 	currentWeapon = -1;
 	SetWeapon( idealWeapon );
 }
