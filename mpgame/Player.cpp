@@ -6608,7 +6608,7 @@ bool idPlayer::Collide( const trace_t &collision, const idVec3 &velocity ) {
 			other->coins++;
 		}
 		*/
-		gameLocal.Printf("Coin count: %i \n", coins);
+		//gameLocal.Printf("Coin count: %i \n", coins);
 
 	}
 
@@ -8737,10 +8737,10 @@ void idPlayer::AdjustSpeed( void ) {
 	speed *= PowerUpModifier(PMOD_SPEED);
 	if(IT)
 	{
-		speed *= 4;
+		speed *= 2;
 		if(health < 100){
 			if(health == 50){
-				speed *= 2;
+				speed /= 2;
 			}
 			else{
 				speed *= health*(.1);
@@ -8751,7 +8751,10 @@ void idPlayer::AdjustSpeed( void ) {
 	{
 		if(health < 100)
 		{
-			speed *= health*(.01);
+			if(health < 30)
+				speed *= .3;
+			else
+				speed *= health*(.01);
 		}
 	}
 
@@ -10325,6 +10328,7 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 					((idPlayer *)(attacker))->IT = false;
 					this->IT = true;
 					health = 0;
+					GUIMainNotice("Player Died is now it");
 				}
 			}
 		}	

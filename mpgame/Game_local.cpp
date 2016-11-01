@@ -988,7 +988,7 @@ void idGameLocal::SaveGame( idFile *f, saveType_t saveType ) {
 idGameLocal::GetPersistentPlayerInfo
 ============
 */
-const idDict &idGameLocal::GetPersistentPlayerInfo( int clientNum ) {//jarel look at this
+const idDict &idGameLocal::GetPersistentPlayerInfo( int clientNum ) {
 	idEntity	*ent;
 	
 	persistentPlayerInfo[ clientNum ].Clear();
@@ -1145,7 +1145,7 @@ idGameLocal::SetLocalClient
 void idGameLocal::SetLocalClient( int clientNum ) {
 	localClientNum = clientNum;
 }
-//jarel look at this 2nd option
+
 /*
 ===========
 idGameLocal::SetUserInfo
@@ -3074,12 +3074,12 @@ void idGameLocal::SpawnPlayer( int clientNum ) {
 		Error( "'%s' spawned the player as a '%s'.  Player spawnclass must be a subclass of idPlayer.", args.GetString( "classname" ), ent->GetClassname() );
 	}//Jarel "IT" change
 	
-	if (clientNum == 1){
+	/*if (clientNum == 1){
 		common->DPrintf("First client");
 		((idPlayer * )(ent))->IT = true;
 		common->DPrintf("Client 1 is set to IT");
 	}
-
+	*/
 	PACIFIER_UPDATE;
 
 	if ( clientNum != ENTITYNUM_NONE ) {
@@ -6617,7 +6617,6 @@ idGameLocal::SetCurrentPlayerInfo
 */
 void idGameLocal::SetPlayerInfo( idVec3 &origin, idMat3 &axis, int PlayerNum ) {
 	idPlayer	*player;
-	//jarel
 	if ( PlayerNum == -1 ) {
 		player = GetLocalPlayer();
 	} else {

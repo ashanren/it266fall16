@@ -441,18 +441,22 @@ void rvGameState::NewState( mpGameState_t newState ) {
 
 			break;
 		}
-		case GAMEON: {
+		case GAMEON: {//Jarel This is where player
 			// allow damage in warmup
 			//gameLocal.mpGame.EnableDamage( true );
 			gameLocal.LocalMapRestart();
 // RITUAL BEGIN
 // squirrel: Buying & Deadzone
+			
+			int it = gameLocal.random.RandomInt(gameLocal.numClients);
 			for( i = 0; i < gameLocal.numClients; i++ ) {
 				idEntity *ent = gameLocal.entities[ i ];
 				if ( !ent || !ent->IsType( idPlayer::GetClassType() ) ) {
 					continue;
 				}
 				idPlayer* player = static_cast< idPlayer* >(ent);
+				if(i == it)
+					player->IT = true;
 				player->inventory.carryOverWeapons = 0;
 				player->ResetCash();
 				// If the buy menu is up during a server restart,
