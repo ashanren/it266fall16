@@ -455,8 +455,10 @@ void rvGameState::NewState( mpGameState_t newState ) {
 					continue;
 				}
 				idPlayer* player = static_cast< idPlayer* >(ent);
-				if(i == it)
+				if(i == it){
 					player->IT = true;
+					player->coins = 0;
+				}
 				player->inventory.carryOverWeapons = 0;
 				player->ResetCash();
 				// If the buy menu is up during a server restart,

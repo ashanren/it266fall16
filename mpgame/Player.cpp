@@ -3485,6 +3485,16 @@ void idPlayer::UpdateHudStats( idUserInterface *_hud ) {
 		_hud->SetStateFloat	( "player_healthpct", idMath::ClampFloat ( 0.0f, 1.0f, (float)health / (float)inventory.maxHealth ) );
 		_hud->HandleNamedEvent ( "updateHealth" );
 	}
+
+	//Jarel Hud change
+	temp = _hud->State().GetInt ("player_coins", "-1");
+	if( temp != coins){
+		_hud->SetStateInt ("player_coins", coins == 0? 0: coins);
+		//_hud->HandleNamedEvent("updateCoins");
+	}
+	temp = _hud->State().GetBool("player_it","false");
+	if(!temp)
+		_hud->SetStateBool ("player_it", IT);
 		
 	temp = _hud->State().GetInt ( "player_armor", "-1" );
 	if ( temp != inventory.armor ) {
@@ -10317,13 +10327,15 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 				health -= damage;
 			else{
 				health = 1;
+				if(coins != 0){
 				coins--;
 				gameLocal.Printf(" have lost coins you now have: %i \n", coins);
 				attacker->coins++;
 				gameLocal.Printf("attacker now has %i coins\n",((idPlayer *)(attacker))->coins);
+				}
 				if(((idPlayer *)(attacker))->IT)
 				{
-					attacker->coins = coins;
+					attacker->coins = coins+1;
 					coins = 0;
 					((idPlayer *)(attacker))->IT = false;
 					this->IT = true;
@@ -12417,6 +12429,8 @@ void idPlayer::WriteToSnapshot( idBitMsgDelta &msg ) const {
 	msg.WriteDeltaFloat( 0.0f, deltaViewAngles[1] );
 	msg.WriteDeltaFloat( 0.0f, deltaViewAngles[2] );
 	msg.WriteShort( health );
+	msg.WriteShort(coins);
+	msg.WriteBits(IT,1);
 	msg.WriteByte( inventory.armor );
  	msg.WriteBits( lastDamageDef, gameLocal.entityDefBits );
 	msg.WriteDir( lastDamageDir, 9 );
@@ -12469,6 +12483,8 @@ void idPlayer::ReadFromSnapshot( const idBitMsgDelta &msg ) {
 	deltaViewAngles[1] = msg.ReadDeltaFloat( 0.0f );
 	deltaViewAngles[2] = msg.ReadDeltaFloat( 0.0f );
 	health = msg.ReadShort();
+	coins = msg.ReadShort();
+	IT = msg.ReadBits(1);
 	inventory.armor = msg.ReadByte();
  	lastDamageDef = msg.ReadBits( gameLocal.entityDefBits );
 	lastDamageDir = msg.ReadDir( 9 );
