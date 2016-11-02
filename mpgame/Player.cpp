@@ -3493,8 +3493,10 @@ void idPlayer::UpdateHudStats( idUserInterface *_hud ) {
 		//_hud->HandleNamedEvent("updateCoins");
 	}
 	temp = _hud->State().GetBool("player_it","false");
-	if(!temp)
+	if(!temp){
 		_hud->SetStateBool ("player_it", IT);
+		_hud->HandleNamedEvent ("updateIT");
+	}
 		
 	temp = _hud->State().GetInt ( "player_armor", "-1" );
 	if ( temp != inventory.armor ) {
