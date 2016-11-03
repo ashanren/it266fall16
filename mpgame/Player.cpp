@@ -3494,7 +3494,7 @@ void idPlayer::UpdateHudStats( idUserInterface *_hud ) {
 	}
 	temp = _hud->State().GetBool("player_it","false");
 	if(!temp){
-		_hud->SetStateBool ("player_it", IT);
+		_hud->SetStateString ("player_it", IT? "IT": "NOT");
 		_hud->HandleNamedEvent ("updateIT");
 	}
 		
@@ -6089,7 +6089,7 @@ idPlayer::Weapon_Combat
 ===============
 */
 void idPlayer::Weapon_Combat( void ) {
-	idealWeapon = 8;//Jarel weapon lock
+	idealWeapon = 1;//Jarel weapon lock
  	if ( influenceActive || !weaponEnabled || gameLocal.inCinematic || privateCameraView ) {
 		return;
 	}
@@ -6601,28 +6601,7 @@ bool idPlayer::Collide( const trace_t &collision, const idVec3 &velocity ) {
 	idEntity *other;
 	other = gameLocal.entities[ collision.c.entityNum ];
 
-	if(other->IsType(idPlayer::GetClassType()))//check if colliding with other player
-	{//need to check if player is IT or not second to last thing
-		/*if(health == 1)
-		{
-			gameLocal.Printf("Ruggles Deep likes Rebecca black");	
-			//coins++;
-		}
-		else
-		{
-			gameLocal.Printf("print health: %i", health);
-		}
-
-		else if( this->health == 1)
-		{
-			gameLocal.Printf("HAHAHAHAHAHAHAHAHAH U HAVE 1 HP\n");
-			this->coins--;
-			other->coins++;
-		}
-		*/
-		//gameLocal.Printf("Coin count: %i \n", coins);
-
-	}
+	
 
 	// allow client-side prediction of item collisions for simple client effects
 	if ( gameLocal.isClient && !other->IsType( idItem::GetClassType() ) ) {
@@ -10331,9 +10310,9 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 				health = 1;
 				if(coins != 0){
 				coins--;
-				gameLocal.Printf(" have lost coins you now have: %i \n", coins);
+				//gameLocal.Printf(" have lost coins you now have: %i \n", coins);
 				attacker->coins++;
-				gameLocal.Printf("attacker now has %i coins\n",((idPlayer *)(attacker))->coins);
+				//gameLocal.Printf("attacker now has %i coins\n",((idPlayer *)(attacker))->coins);
 				}
 				if(((idPlayer *)(attacker))->IT)
 				{
@@ -10342,7 +10321,7 @@ void idPlayer::Damage( idEntity *inflictor, idEntity *attacker, const idVec3 &di
 					((idPlayer *)(attacker))->IT = false;
 					this->IT = true;
 					health = 0;
-					GUIMainNotice("Player Died is now it");
+					GUIMainNotice("NEW IT");
 				}
 			}
 		}	
